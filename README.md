@@ -1,3 +1,6 @@
+Implemented from the template here: https://replit.com/@kevinleffew/llm-podcast-engine
+Created by https://x.com/kleffew94
+
 # 🎙️ AI Podcast Generator
 
 An intelligent podcast generator that automatically creates engaging audio content from web sources using AI technologies. The system scrapes news content, generates natural-sounding narratives, and converts them into audio podcasts.
@@ -17,13 +20,12 @@ AI Podcast Generator helps create automated podcasts by scraping news sources, g
 ## Get Started in Minutes!
 
 ### 1️⃣ Prerequisites
-- Replit account (Core recommended, contact sales@replit.org for a sponsored uppgrade, just mention "firecrawl")
 - Groq API key
 - ElevenLabs API key
 - Firecrawl API key
 
 ### 2️⃣ API Configuration
-Add your API keys to Replit's Secret Manager:
+Add your API keys to .env:
 - `GROQ_API_KEY`: Your Groq API key
 - `ELEVENLABS_API_KEY`: Your ElevenLabs API key
 - `FIRECRAWL_API_KEY`: Your Firecrawl API key
