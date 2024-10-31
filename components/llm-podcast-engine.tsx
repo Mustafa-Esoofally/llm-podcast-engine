@@ -1,17 +1,14 @@
 'use client'
 
-// 1. Import necessary React hooks and components
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Mic, Plus, X, Play, Pause, Flame, Loader, Download } from "lucide-react"
+import { Mic, Plus, X, Play, Pause, Flame, Loader, Download, Trash2 } from "lucide-react"
 
-// 2. Define the main LlmPodcastEngine component
 export function LlmPodcastEngine() {
-  // 3. Set up state variables using useState hook
   const [isLoading, setIsLoading] = useState(false)
   const [newsScript, setNewsScript] = useState('')
   const [urls, setUrls] = useState(['https://techcrunch.com/', 'https://www.theverge.com/', 'https://news.ycombinator.com/'])
@@ -23,11 +20,9 @@ export function LlmPodcastEngine() {
   const [currentStatus, setCurrentStatus] = useState('')
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // 4. Create refs for audio and scroll area
   const audioRef = useRef<HTMLAudioElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  // 5. Function to validate URL
   const validateUrl = (url: string) => {
     try {
       new URL(url)
@@ -37,7 +32,6 @@ export function LlmPodcastEngine() {
     }
   }
 
-  // 6. Function to add a new URL
   const addUrl = () => {
     if (newUrl && !urls.includes(newUrl) && validateUrl(newUrl)) {
       setUrls([...urls, newUrl]);
@@ -45,12 +39,10 @@ export function LlmPodcastEngine() {
     }
   };
 
-  // 7. Function to remove a URL
   const removeUrl = (urlToRemove: string) => {
     setUrls(urls.filter(url => url !== urlToRemove))
   }
 
-  // 8. Function to fetch news and generate podcast
   const fetchNews = async () => {
     setIsLoading(true)
     setIsExpanded(true)
@@ -101,7 +93,7 @@ export function LlmPodcastEngine() {
                 setShowAudio(true)
                 setIsLoading(false)
                 setIsAudioLoading(true)
-                setCurrentStatus('Audio ready. Click play to listen.')
+                setCurrentStatus('Audio is ready. Click the play button to listen.')
                 break
               case 'error':
                 console.error("Error:", data.message)
@@ -114,12 +106,11 @@ export function LlmPodcastEngine() {
       }
     } catch (error) {
       console.error('Fetch failed:', error)
-      setCurrentStatus("Connection to server failed")
+      setCurrentStatus("Failed to connect to server")
       setIsLoading(false)
     }
   }
 
-  // 11. Function to toggle play/pause of audio
   const togglePlayPause = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -131,7 +122,6 @@ export function LlmPodcastEngine() {
     }
   }
 
-  // 12. Function to download the generated audio
   const downloadAudio = () => {
     if (audioSrc) {
       const link = document.createElement('a')
@@ -143,7 +133,6 @@ export function LlmPodcastEngine() {
     }
   }
 
-  // 13. Use effect hook to set up audio event listeners
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.addEventListener('loadeddata', () => setIsAudioLoading(false))
@@ -155,163 +144,156 @@ export function LlmPodcastEngine() {
     }
   }, [])
 
-  // 14. Define gradient animation for loading state
-  const gradientAnimation = {
-    initial: {
-      background: 'linear-gradient(45deg, #FF8C00, #000000)',
-    },
-    animate: {
-      background: [
-        'linear-gradient(45deg, #FF8C00, #000000)',
-        'linear-gradient(45deg, #000000, #FF8C00)',
-      ],
-      transition: {
-        duration: 5,
-        repeat: Infinity,
-        ease: "linear"
-      }
-    }
-  }
-
-  // 15. Render the component
   return (
-    <motion.div 
-      className="min-h-screen flex flex-col font-light text-white"
-      initial="initial"
-      animate={isLoading ? "animate" : "initial"}
-      variants={gradientAnimation}
-    >
-      {/* 16. Header section */}
-      <header className="bg-black shadow-sm h-16">
-        <div className="max-w-7xl mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-light text-white">Podcast Engine</h1>
+    <div className="min-h-screen flex flex-col font-light bg-gradient-to-br from-gray-900 to-black text-white">
+      <header className="bg-black/50 backdrop-blur-sm shadow-lg border-b border-orange-500/20 h-16 fixed w-full z-50">
+        <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-medium bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+          Podcast engine
+          </h1>
+          <div className="text-sm text-orange-400/60">
+          AI-driven news podcast generator
+          </div>
         </div>
       </header>
-      {/* 17. Main content section */}
-      <main className="flex-grow flex items-center justify-center py-4">
-        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Card className="w-full rounded-lg shadow-lg overflow-hidden bg-black border-orange-500 border">
-            <CardContent className="p-6 flex flex-col lg:flex-row gap-6 h-[calc(100vh-12rem)]">
-              {/* 18. URL input and list section */}
+      <main className="flex-grow flex items-center justify-center py-20 px-4">
+        <div className="w-full max-w-7xl">
+          <Card className="w-full rounded-xl shadow-2xl overflow-hidden bg-black/40 backdrop-blur-md border-orange-500/30 border">
+            <CardContent className="p-8 flex flex-col lg:flex-row gap-8 h-[calc(100vh-12rem)]">
               <motion.div 
-                className="w-full lg:w-1/2 flex flex-col space-y-4"
+                className="w-full lg:w-1/2 flex flex-col space-y-6"
                 initial={{ width: "100%" }}
                 animate={{ width: isExpanded ? "50%" : "100%" }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               >
-                <div className="flex space-x-2">
+                <div className="flex space-x-3">
                   <Input
                     type="url"
-                    placeholder="Enter a URL (e.g., https://example.com)"
+                    placeholder="Enter news website URL..."
                     value={newUrl}
                     onChange={(e) => setNewUrl(e.target.value)}
-                    className="flex-grow bg-gray-800 text-white border-orange-500"
+                    className="flex-grow bg-white/5 border-orange-500/30 focus:border-orange-500 focus:ring-orange-500/20 transition-all duration-300"
                   />
-                  <Button onClick={addUrl} className="bg-orange-500 hover:bg-orange-600 text-black">
+                  <Button 
+                    onClick={addUrl} 
+                    className="bg-orange-500 hover:bg-orange-600 text-black font-medium transition-all duration-300 shadow-lg hover:shadow-orange-500/20"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add URL
+                    Add
                   </Button>
                 </div>
-                <ScrollArea className="flex-grow">
-                  <div className="space-y-2">
+
+                <ScrollArea className="flex-grow rounded-lg border border-orange-500/20 bg-black/20 p-4">
+                  <div className="space-y-3">
                     {urls.map((url, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-800 p-2 rounded">
-                        <span className="truncate text-orange-300">{url}</span>
-                        <Button variant="ghost" size="sm" onClick={() => removeUrl(url)} className="text-white hover:text-orange-300">
-                          <X className="h-4 w-4" />
-                          <span className="sr-only">Remove {url}</span>
+                      <motion.div 
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center justify-between bg-white/5 p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
+                      >
+                        <span className="truncate text-orange-300/80">{url}</span>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => removeUrl(url)} 
+                          className="text-orange-300/60 hover:text-orange-300 hover:bg-red-500/20"
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </ScrollArea>
+
                 <Button 
                   onClick={fetchNews} 
                   disabled={isLoading} 
-                  className="w-full bg-gradient-to-r from-orange-500 to-black text-white font-light"
+                  className={`w-full py-6 text-lg font-medium transition-all duration-300 ${
+                    isLoading 
+                      ? 'bg-orange-500/50 cursor-not-allowed' 
+                      : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg hover:shadow-orange-500/20'
+                  }`}
                 >
                   {isLoading ? (
                     <>
-                      <Flame className="mr-2 h-4 w-4 animate-pulse" />
-                      Generating Podcast
+                      <Flame className="mr-3 h-5 w-5 animate-pulse" />
+                      Generating...
                     </>
                   ) : (
                     <>
-                      <Mic className="mr-2 h-4 w-4" />
+                      <Mic className="mr-3 h-5 w-5" />
                       Generate Podcast
                     </>
                   )}
                 </Button>
               </motion.div>
-              {/* 19. Podcast content and audio player section */}
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div 
-                    className="w-full lg:w-1/2 flex flex-col space-y-4 bg-black rounded-lg relative overflow-hidden"
+                    className="w-full lg:w-1/2 flex flex-col space-y-6 rounded-xl relative overflow-hidden"
                     initial={{ width: 0, opacity: 0 }}
                     animate={{ width: "50%", opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   >
                     {isLoading && !newsScript ? (
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-black flex items-center justify-center">
-                        <p className="text-white text-center">{currentStatus}</p>
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-black/20 backdrop-blur-sm flex items-center justify-center">
+                        <div className="text-center space-y-4">
+                          <Loader className="h-8 w-8 animate-spin text-orange-500" />
+                          <p className="text-orange-300">{currentStatus}</p>
+                        </div>
                       </div>
                     ) : (
                       <>
                         {currentStatus && (
-                          <div className="bg-orange-500 text-black p-2 rounded-md mb-2">
+                          <div className="bg-orange-500/10 border border-orange-500/30 text-orange-300 p-4 rounded-lg">
                             {currentStatus}
                           </div>
                         )}
-                        <ScrollArea className="flex-grow rounded-md p-4 bg-black" ref={scrollAreaRef}>
-                          <pre className="whitespace-pre-wrap font-light text-white">{newsScript}</pre>
+                        <ScrollArea className="flex-grow rounded-lg border border-orange-500/20 bg-black/20 p-6" ref={scrollAreaRef}>
+                          <pre className="whitespace-pre-wrap font-light text-orange-100/90 leading-relaxed">
+                            {newsScript}
+                          </pre>
                         </ScrollArea>
+
                         {showAudio && (
                           <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="space-y-2"
+                            className="space-y-4 p-4 bg-white/5 rounded-lg border border-orange-500/20"
                           >
-                            <audio 
-                              ref={audioRef} 
-                              src={audioSrc} 
-                              className="w-full" 
-                              controls 
-                              onLoadedData={() => setIsAudioLoading(false)}
-                            />
-                            <div className="flex space-x-2">
-                              <Button 
-                                onClick={togglePlayPause} 
-                                className="flex-grow bg-gradient-to-r from-orange-500 to-black text-white font-light"
-                                disabled={isAudioLoading}
-                              >
-                                {isAudioLoading ? (
-                                  <>
-                                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                                    Loading Audio
-                                  </>
-                                ) : isPlaying ? (
-                                  <>
-                                    <Pause className="mr-2 h-4 w-4" />
-                                    Pause Audio
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play className="mr-2 h-4 w-4" />
-                                    Play Audio
-                                  </>
-                                )}
-                              </Button>
-                              <Button
-                                onClick={downloadAudio}
-                                className="bg-orange-500 hover:bg-orange-600 text-black"
-                                disabled={isAudioLoading}
-                              >
-                                <Download className="h-4 w-4 mr-2" />
-                                Download
-                              </Button>
+                            <div className="relative">
+                              <audio 
+                                ref={audioRef} 
+                                src={audioSrc} 
+                                className="w-full h-12 opacity-0" 
+                              />
+                              <div className="absolute inset-0 flex items-center justify-between bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-md px-4">
+                                <Button 
+                                  onClick={togglePlayPause} 
+                                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                                  disabled={isAudioLoading}
+                                >
+                                  {isAudioLoading ? (
+                                    <Loader className="h-5 w-5 animate-spin" />
+                                  ) : isPlaying ? (
+                                    <Pause className="h-5 w-5" />
+                                  ) : (
+                                    <Play className="h-5 w-5" />
+                                  )}
+                                </Button>
+                                <div className="text-orange-300 text-sm">
+                                  {isAudioLoading ? 'Loading...' : (isPlaying ? 'playing' : 'Paused')}
+                                </div>
+                                <Button
+                                  onClick={downloadAudio}
+                                  className="bg-black/40 hover:bg-black/60 border border-orange-500/30 text-orange-400"
+                                  disabled={isAudioLoading}
+                                >
+                                  <Download className="h-5 w-5" />
+                                </Button>
+                              </div>
                             </div>
                           </motion.div>
                         )}
@@ -324,7 +306,6 @@ export function LlmPodcastEngine() {
           </Card>
         </div>
       </main>
-      {/* 20. Footer section */}
-    </motion.div>
+    </div>
   )
 }
